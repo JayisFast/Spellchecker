@@ -30,6 +30,11 @@ public class SpellChecker extends Application {
 	private Book book;
 	private final double PREF_HEIGHT_LISTVIEW = 900.0;
 	private ObservableList<String> collectionMisspelledWords;
+	VBox vBoxDictionary = new VBox();
+	VBox vBoxText = new VBox();
+	VBox vBoxWords = new VBox();
+	HBox hBoxContentsPane = new HBox();
+	VBox containsAll = new VBox();
 	
 	@Override
 	public void start(Stage primaryStage) throws Exception {
@@ -45,20 +50,14 @@ public class SpellChecker extends Application {
 		Text dictionaryTitle = new Text("\nDictionary: " + mainDictionary.getSize());
 		Text fileNotFoundWarning = new Text("File not found");
 
-		VBox vBoxDictionary = new VBox();
-			vBoxDictionary.getChildren().addAll(dictionaryTitle, listViewDictionary);
-			vBoxDictionary.setVisible(false);
-		VBox vBoxText = new VBox();
-			vBoxText.setVisible(false);
-		VBox vBoxWords = new VBox();
-			vBoxWords.setVisible(false);
-		HBox hBoxContentsPane = new HBox();
-			hBoxContentsPane.getChildren().addAll(vBoxDictionary, vBoxWords, vBoxText);
-		VBox containsAll = new VBox();
-			containsAll.setPrefSize(1600, 800);
-			containsAll.setBackground(new Background(new BackgroundFill(Color.LIGHTBLUE, CornerRadii.EMPTY, Insets.EMPTY)));
-		
-			
+	
+		vBoxDictionary.getChildren().addAll(dictionaryTitle, listViewDictionary);
+		vBoxDictionary.setVisible(false);
+		vBoxText.setVisible(false);
+		vBoxWords.setVisible(false);
+		hBoxContentsPane.getChildren().addAll(vBoxDictionary, vBoxWords, vBoxText);
+		containsAll.setPrefSize(1600, 800);
+		containsAll.setBackground(new Background(new BackgroundFill(Color.LIGHTBLUE, CornerRadii.EMPTY, Insets.EMPTY)));
 			
 		//Creates MenuBar 
 		MenuBar menuBar = new MenuBar(); 
@@ -73,19 +72,7 @@ public class SpellChecker extends Application {
 				book = new Book("Oliver.txt");
 				try {
 					book.loadPredifinedBook();
-					final int numMisspelledWords = simpleSpellCheck();
-					Text wordTitle = new Text("Unique Misspelled Words: " + getWordSize() + "\nTotal:\t\t\t\t" + numMisspelledWords);
-					Text paragraphTitle = new Text("\nParagraphs: " + book.getParagraphSize());
-					ListView<String> listViewBook = new ListView<>(book.getObservableListParagraphs());
-					ListView<String> listViewWords = new ListView<>(getObservableListWords());
-
-					listViewBook.setPrefSize(1200, 900);
-					listViewWords.setPrefSize(200, 900);
-					vBoxText.getChildren().clear();
-					vBoxWords.getChildren().clear();
-					vBoxText.getChildren().addAll(paragraphTitle, listViewBook);
-					vBoxWords.getChildren().addAll(wordTitle, listViewWords);
-					containsAll.setBackground(new Background(new BackgroundFill(Color.LIGHTGREEN, CornerRadii.EMPTY, Insets.EMPTY)));
+					setupDisplay();
 				}//end try 
 				catch (FileNotFoundException e) {
 					vBoxText.getChildren().add(fileNotFoundWarning);
@@ -101,19 +88,7 @@ public class SpellChecker extends Application {
 
 				try {
 					book.loadPredifinedBook();
-					final int numMisspelledWords = simpleSpellCheck();
-					Text wordTitle = new Text("Unique Misspelled Words: " + getWordSize() + "\nTotal:\t\t\t\t" + numMisspelledWords);
-					Text paragraphTitle = new Text("\nParagraphs: " + book.getParagraphSize());
-					ListView<String> listViewBook = new ListView<>(book.getObservableListParagraphs());
-					ListView<String> listViewWords = new ListView<>(getObservableListWords());
-
-					listViewBook.setPrefSize(1400, 900);
-					listViewWords.setPrefSize(200, 900);
-					vBoxText.getChildren().clear();
-					vBoxWords.getChildren().clear();
-					vBoxText.getChildren().addAll(paragraphTitle, listViewBook);
-					vBoxWords.getChildren().addAll(wordTitle, listViewWords);
-					containsAll.setBackground(new Background(new BackgroundFill(Color.LIGHTGREEN, CornerRadii.EMPTY, Insets.EMPTY)));
+					setupDisplay();
 				}//end try 
 				catch (FileNotFoundException e) {
 					vBoxText.getChildren().add(fileNotFoundWarning);
@@ -131,19 +106,7 @@ public class SpellChecker extends Application {
 
 					try {
 						book.loadBook(file);
-						final int numMisspelledWords = simpleSpellCheck();
-						Text wordTitle = new Text("Unique Misspelled Words: " + getWordSize() + "\nTotal:\t\t\t\t" + numMisspelledWords);
-						Text paragraphTitle = new Text("\nParagraphs: " + book.getParagraphSize());
-						ListView<String> listViewBook = new ListView<>(book.getObservableListParagraphs());
-						ListView<String> listViewWords = new ListView<>(getObservableListWords());
-
-						listViewBook.setPrefSize(1400, 900);
-						listViewWords.setPrefSize(200, 900);
-						vBoxText.getChildren().clear();
-						vBoxWords.getChildren().clear();
-						vBoxText.getChildren().addAll(paragraphTitle, listViewBook);
-						vBoxWords.getChildren().addAll(wordTitle, listViewWords);
-						containsAll.setBackground(new Background(new BackgroundFill(Color.LIGHTGREEN, CornerRadii.EMPTY, Insets.EMPTY)));
+						setupDisplay();
 					} catch (FileNotFoundException e) {
 						vBoxText.getChildren().add(fileNotFoundWarning);
 					}//end catch
@@ -238,6 +201,22 @@ public class SpellChecker extends Application {
       	check = false;
       return check;
 	}//end checkWord
+	
+	public void setupDisplay() {
+		final int numMisspelledWords = simpleSpellCheck();
+		Text wordTitle = new Text("Unique Misspelled Words: " + getWordSize() + "\nTotal:\t\t\t\t" + numMisspelledWords);
+		Text paragraphTitle = new Text("\nParagraphs: " + book.getParagraphSize());
+		ListView<String> listViewBook = new ListView<>(book.getObservableListParagraphs());
+		ListView<String> listViewWords = new ListView<>(getObservableListWords());
+
+		listViewBook.setPrefSize(1200, 900);
+		listViewWords.setPrefSize(200, 900);
+		vBoxText.getChildren().clear();
+		vBoxWords.getChildren().clear();
+		vBoxText.getChildren().addAll(paragraphTitle, listViewBook);
+		vBoxWords.getChildren().addAll(wordTitle, listViewWords);
+		containsAll.setBackground(new Background(new BackgroundFill(Color.LIGHTGREEN, CornerRadii.EMPTY, Insets.EMPTY)));
+	}//end setupDisplay
 	
 	public ObservableList<String> getObservableListWords() {
 		return collectionMisspelledWords;

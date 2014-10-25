@@ -34,7 +34,6 @@ public class Dictionary {
 		double elapseTime = (double)(System.currentTimeMillis() - startTime)/1000.0;
 		System.out.printf("Collection Type:%s loadDictionary() Word Count:%d Elapse Time:%.3f seconds\n", collectionWords.getClass().getName(), collectionWords.size(), elapseTime);
 
-		
 	} // end loadDictionary()
 
 	public ObservableList<String> getObservableList() {

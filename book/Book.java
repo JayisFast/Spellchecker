@@ -20,9 +20,7 @@ public class Book {
 	
 	public void loadPredifinedBook() throws FileNotFoundException {
 		loadBook(new File(fileName));
-	}
-	
-	
+	}//end loadPredefinedBook
 	
 	public void loadBook(File file) throws FileNotFoundException {
 		LinkedList<String> linkedList = new LinkedList<>();
